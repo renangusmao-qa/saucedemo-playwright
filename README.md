@@ -18,7 +18,7 @@ Usei os atributos `data-test` do site como seletores. Eles quebram menos que sel
 
 ## Tecnologias
 
-Playwright Test com Chromium, TypeScript e Node.js. Também deixei pronto um workflow do GitHub Actions em `.github/workflows/tests.yml`, que ainda não rodei.
+Playwright Test com Chromium, TypeScript e Node.js. Os testes e a checagem de tipos rodam no GitHub Actions a cada push na `main`, pelo workflow `.github/workflows/tests.yml`.
 
 ## Como rodar
 
