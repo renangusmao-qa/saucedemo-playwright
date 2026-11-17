@@ -14,7 +14,7 @@ Em `tests/checkout.spec.ts` testo o carrinho e o checkout: adicionar e remover p
 
 ## O que aprendi
 
-Usei os atributos `data-test` do site como seletores. Eles quebram menos que seletores de CSS e deixam o teste mais fácil de ler. Também percebi que repito o mesmo login nos dois arquivos. Pretendo resolver isso com um Page Object e uma fixture na próxima etapa.
+Usei os atributos `data-test` do site como seletores. Eles quebram menos que seletores de CSS e deixam o teste mais fácil de ler. O login se repetia nos três arquivos de teste, então movi essa lógica para um Page Object (`pages/LoginPage.ts`) e para uma fixture (`tests/fixtures.ts`). A fixture `loginPage` abre o site e a `loggedInPage` já entrega a página logada como `standard_user`. Só o login virou Page Object. Os outros seletores ainda ficam direto nos testes.
 
 ## Tecnologias
 
