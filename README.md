@@ -1,29 +1,22 @@
 # Automação de testes com Playwright + TypeScript
 
-Projeto de portfólio com testes automatizados no site de demonstração [SauceDemo](https://www.saucedemo.com).
+Este é meu projeto de portfólio para praticar automação de testes. Uso o [SauceDemo](https://www.saucedemo.com), um site de demonstração feito para esse tipo de treino.
 
-## O que é testado
+## O que já fiz
 
-**Login** ([tests/login.spec.ts](tests/login.spec.ts))
-- Login válido leva à lista de produtos
-- Senha inválida mostra mensagem de erro
-- Usuário bloqueado mostra mensagem de erro
+Escrevi sete testes. Três cobrem o login: entrar com um usuário válido, errar a senha e tentar entrar com um usuário bloqueado. Os outros quatro cobrem o carrinho e o checkout: adicionar um produto, removê-lo, finalizar um pedido e tentar finalizar sem preencher os dados obrigatórios. Os arquivos estão em `tests/login.spec.ts` e `tests/checkout.spec.ts`.
 
-**Carrinho e checkout** ([tests/checkout.spec.ts](tests/checkout.spec.ts))
-- Adicionar produto atualiza o contador do carrinho
-- Remover produto esvazia o carrinho
-- Checkout completo finaliza o pedido
-- Checkout sem dados obrigatórios mostra mensagem de erro
+## O que aprendi
+
+Usei os atributos `data-test` do site como seletores. Eles quebram menos que seletores de CSS e deixam o teste mais fácil de ler. Também percebi que repito o mesmo login nos dois arquivos. Pretendo resolver isso com um Page Object e uma fixture na próxima etapa.
 
 ## Tecnologias
 
-- [Playwright Test](https://playwright.dev) (navegador Chromium)
-- TypeScript
-- Node.js
+Playwright Test com Chromium, TypeScript e Node.js.
 
 ## Como rodar
 
-Pré-requisito: Node.js instalado.
+Preciso do Node.js instalado. Depois, rodo estes comandos:
 
 ```bash
 npm install                      # instala as dependências
