@@ -63,4 +63,20 @@ test.describe('Carrinho e checkout', () => {
     await cartPage.continueShopping();
     await expect(page).toHaveURL(/inventory\.html/);
   });
+
+  test('checkout sem sobrenome mostra erro', async ({ inventoryPage, cartPage, checkoutPage }) => {
+    await inventoryPage.openCart();
+    await cartPage.checkout();
+    await checkoutPage.fillInfo('Maria', '', '01001000');
+    await checkoutPage.continue();
+    await expect(checkoutPage.error).toContainText('Last Name is required');
+  });
+
+  test('checkout sem CEP mostra erro', async ({ inventoryPage, cartPage, checkoutPage }) => {
+    await inventoryPage.openCart();
+    await cartPage.checkout();
+    await checkoutPage.fillInfo('Maria', 'Silva', '');
+    await checkoutPage.continue();
+    await expect(checkoutPage.error).toContainText('Postal Code is required');
+  });
 });

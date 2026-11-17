@@ -4,6 +4,7 @@ export class InventoryPage {
   readonly items: Locator;
   readonly names: Locator;
   readonly prices: Locator;
+  readonly images: Locator;
   readonly cartBadge: Locator;
   readonly loginButton: Locator;
 
@@ -11,6 +12,7 @@ export class InventoryPage {
     this.items = page.locator('[data-test="inventory-item"]');
     this.names = page.locator('[data-test="inventory-item-name"]');
     this.prices = page.locator('[data-test="inventory-item-price"]');
+    this.images = page.locator('.inventory_item_img img');
     this.cartBadge = page.locator('[data-test="shopping-cart-badge"]');
     this.loginButton = page.locator('[data-test="login-button"]');
   }
