@@ -5,10 +5,12 @@
   "private": true,
   "scripts": {
     "test": "playwright test",
-    "report": "playwright show-report"
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
-    "@types/node": "^26.6.6"
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2"
   }
 }
