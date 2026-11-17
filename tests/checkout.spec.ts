@@ -1,72 +1,66 @@
 import { test, expect } from './fixtures';
 
 test.describe('Carrinho e checkout', () => {
-  test.beforeEach(async ({ loggedInPage: page }) => {
-    await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
+  test.beforeEach(async ({ inventoryPage }) => {
+    await inventoryPage.add('sauce-labs-backpack');
   });
 
-  test('adicionar produto atualiza o contador do carrinho', async ({ loggedInPage: page }) => {
-    await expect(page.locator('[data-test="shopping-cart-badge"]')).toHaveText('1');
+  test('adicionar produto atualiza o contador do carrinho', async ({ inventoryPage }) => {
+    await expect(inventoryPage.cartBadge).toHaveText('1');
   });
 
-  test('remover produto esvazia o carrinho', async ({ loggedInPage: page }) => {
-    await page.locator('[data-test="remove-sauce-labs-backpack"]').click();
-    await expect(page.locator('[data-test="shopping-cart-badge"]')).toHaveCount(0);
+  test('remover produto esvazia o carrinho', async ({ inventoryPage }) => {
+    await inventoryPage.remove('sauce-labs-backpack');
+    await expect(inventoryPage.cartBadge).toHaveCount(0);
   });
 
-  test('checkout completo finaliza o pedido', async ({ loggedInPage: page }) => {
-    await page.locator('[data-test="shopping-cart-link"]').click();
-    await expect(page.locator('[data-test="inventory-item-name"]')).toHaveText('Sauce Labs Backpack');
-    await page.locator('[data-test="checkout"]').click();
-    await page.locator('[data-test="firstName"]').fill('Maria');
-    await page.locator('[data-test="lastName"]').fill('Silva');
-    await page.locator('[data-test="postalCode"]').fill('01001000');
-    await page.locator('[data-test="continue"]').click();
-    await page.locator('[data-test="finish"]').click();
-    await expect(page.locator('[data-test="complete-header"]')).toHaveText('Thank you for your order!');
+  test('checkout completo finaliza o pedido', async ({ inventoryPage, cartPage, checkoutPage }) => {
+    await inventoryPage.openCart();
+    await expect(cartPage.itemNames).toHaveText('Sauce Labs Backpack');
+    await cartPage.checkout();
+    await checkoutPage.fillInfo('Maria', 'Silva', '01001000');
+    await checkoutPage.continue();
+    await checkoutPage.finish();
+    await expect(checkoutPage.completeHeader).toHaveText('Thank you for your order!');
   });
 
-  test('checkout sem dados obrigatórios mostra erro', async ({ loggedInPage: page }) => {
-    await page.locator('[data-test="shopping-cart-link"]').click();
-    await page.locator('[data-test="checkout"]').click();
-    await page.locator('[data-test="continue"]').click();
-    await expect(page.locator('[data-test="error"]')).toContainText('First Name is required');
+  test('checkout sem dados obrigatórios mostra erro', async ({ inventoryPage, cartPage, checkoutPage }) => {
+    await inventoryPage.openCart();
+    await cartPage.checkout();
+    await checkoutPage.continue();
+    await expect(checkoutPage.error).toContainText('First Name is required');
   });
 
-  test('resumo do pedido mostra o total com imposto', async ({ loggedInPage: page }) => {
-    await page.locator('[data-test="shopping-cart-link"]').click();
-    await page.locator('[data-test="checkout"]').click();
-    await page.locator('[data-test="firstName"]').fill('Maria');
-    await page.locator('[data-test="lastName"]').fill('Silva');
-    await page.locator('[data-test="postalCode"]').fill('01001000');
-    await page.locator('[data-test="continue"]').click();
-    await expect(page.locator('[data-test="subtotal-label"]')).toHaveText('Item total: $29.99');
-    await expect(page.locator('[data-test="tax-label"]')).toHaveText('Tax: $2.40');
-    await expect(page.locator('[data-test="total-label"]')).toHaveText('Total: $32.39');
+  test('resumo do pedido mostra o total com imposto', async ({ inventoryPage, cartPage, checkoutPage }) => {
+    await inventoryPage.openCart();
+    await cartPage.checkout();
+    await checkoutPage.fillInfo('Maria', 'Silva', '01001000');
+    await checkoutPage.continue();
+    await expect(checkoutPage.subtotal).toHaveText('Item total: $29.99');
+    await expect(checkoutPage.tax).toHaveText('Tax: $2.40');
+    await expect(checkoutPage.total).toHaveText('Total: $32.39');
   });
 
-  test('cancelar o checkout volta para o carrinho', async ({ loggedInPage: page }) => {
-    await page.locator('[data-test="shopping-cart-link"]').click();
-    await page.locator('[data-test="checkout"]').click();
-    await page.locator('[data-test="cancel"]').click();
+  test('cancelar o checkout volta para o carrinho', async ({ page, inventoryPage, cartPage, checkoutPage }) => {
+    await inventoryPage.openCart();
+    await cartPage.checkout();
+    await checkoutPage.cancel();
     await expect(page).toHaveURL(/cart\.html/);
   });
 
-  test('dois produtos somam no contador e no total', async ({ loggedInPage: page }) => {
-    await page.locator('[data-test="add-to-cart-sauce-labs-bike-light"]').click();
-    await expect(page.locator('[data-test="shopping-cart-badge"]')).toHaveText('2');
-    await page.locator('[data-test="shopping-cart-link"]').click();
-    await page.locator('[data-test="checkout"]').click();
-    await page.locator('[data-test="firstName"]').fill('Maria');
-    await page.locator('[data-test="lastName"]').fill('Silva');
-    await page.locator('[data-test="postalCode"]').fill('01001000');
-    await page.locator('[data-test="continue"]').click();
-    await expect(page.locator('[data-test="subtotal-label"]')).toHaveText('Item total: $39.98');
+  test('dois produtos somam no contador e no total', async ({ inventoryPage, cartPage, checkoutPage }) => {
+    await inventoryPage.add('sauce-labs-bike-light');
+    await expect(inventoryPage.cartBadge).toHaveText('2');
+    await inventoryPage.openCart();
+    await cartPage.checkout();
+    await checkoutPage.fillInfo('Maria', 'Silva', '01001000');
+    await checkoutPage.continue();
+    await expect(checkoutPage.subtotal).toHaveText('Item total: $39.98');
   });
 
-  test('continuar comprando volta para a lista de produtos', async ({ loggedInPage: page }) => {
-    await page.locator('[data-test="shopping-cart-link"]').click();
-    await page.locator('[data-test="continue-shopping"]').click();
+  test('continuar comprando volta para a lista de produtos', async ({ page, inventoryPage, cartPage }) => {
+    await inventoryPage.openCart();
+    await cartPage.continueShopping();
     await expect(page).toHaveURL(/inventory\.html/);
   });
 });

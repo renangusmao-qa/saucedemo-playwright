@@ -1,42 +1,37 @@
 import { test, expect } from './fixtures';
 
 test.describe('Inventário', () => {
-  test.beforeEach(async ({ loggedInPage: page }) => {
+  test('lista os 6 produtos', async ({ inventoryPage }) => {
+    await expect(inventoryPage.items).toHaveCount(6);
   });
 
-  test('lista os 6 produtos', async ({ loggedInPage: page }) => {
-    await expect(page.locator('[data-test="inventory-item"]')).toHaveCount(6);
-  });
-
-  test('ordena por preço do menor para o maior', async ({ loggedInPage: page }) => {
-    await page.locator('[data-test="product-sort-container"]').selectOption('lohi');
-    const prices = (await page.locator('[data-test="inventory-item-price"]').allTextContents())
-      .map((p) => Number(p.replace('$', '')));
+  test('ordena por preço do menor para o maior', async ({ inventoryPage }) => {
+    await inventoryPage.sortBy('lohi');
+    const prices = (await inventoryPage.prices.allTextContents()).map((p) => Number(p.replace('$', '')));
     expect(prices).toEqual([...prices].sort((a, b) => a - b));
   });
 
-  test('ordena por nome de Z a A', async ({ loggedInPage: page }) => {
-    await page.locator('[data-test="product-sort-container"]').selectOption('za');
-    const names = await page.locator('[data-test="inventory-item-name"]').allTextContents();
+  test('ordena por nome de Z a A', async ({ inventoryPage }) => {
+    await inventoryPage.sortBy('za');
+    const names = await inventoryPage.names.allTextContents();
     expect(names).toEqual([...names].sort().reverse());
   });
 
-  test('abre o detalhe de um produto', async ({ loggedInPage: page }) => {
-    await page.locator('[data-test="item-4-title-link"]').click();
+  test('abre o detalhe de um produto', async ({ page, inventoryPage }) => {
+    await inventoryPage.openItem(4);
     await expect(page).toHaveURL(/inventory-item\.html\?id=4/);
-    await expect(page.locator('[data-test="inventory-item-name"]')).toHaveText('Sauce Labs Backpack');
+    await expect(inventoryPage.names).toHaveText('Sauce Labs Backpack');
   });
 
-  test('logout volta para a tela de login', async ({ loggedInPage: page }) => {
-    await page.locator('#react-burger-menu-btn').click();
-    await page.locator('[data-test="logout-sidebar-link"]').click();
-    await expect(page.locator('[data-test="login-button"]')).toBeVisible();
+  test('logout volta para a tela de login', async ({ inventoryPage }) => {
+    await inventoryPage.logout();
+    await expect(inventoryPage.loginButton).toBeVisible();
   });
 
-  test('o carrinho mantém o produto depois de navegar', async ({ loggedInPage: page }) => {
-    await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
-    await page.locator('[data-test="item-4-title-link"]').click();
-    await page.locator('[data-test="back-to-products"]').click();
-    await expect(page.locator('[data-test="shopping-cart-badge"]')).toHaveText('1');
+  test('o carrinho mantém o produto depois de navegar', async ({ inventoryPage }) => {
+    await inventoryPage.add('sauce-labs-backpack');
+    await inventoryPage.openItem(4);
+    await inventoryPage.backToProducts();
+    await expect(inventoryPage.cartBadge).toHaveText('1');
   });
 });
