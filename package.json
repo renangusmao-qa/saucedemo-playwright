@@ -1,0 +1,14 @@
+{
+  "name": "playwright-saucedemo",
+  "version": "1.0.0",
+  "description": "Portfólio de automação de testes com Playwright + TypeScript no SauceDemo",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^26.6.6"
+  }
+}
