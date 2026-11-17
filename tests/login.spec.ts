@@ -1,49 +1,35 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, PASSWORD } from './fixtures';
 
 test.describe('Login', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-  });
-
-  test('login válido leva à lista de produtos', async ({ page }) => {
-    await page.locator('[data-test="username"]').fill('standard_user');
-    await page.locator('[data-test="password"]').fill('secret_sauce');
-    await page.locator('[data-test="login-button"]').click();
+  test('login válido leva à lista de produtos', async ({ page, loginPage }) => {
+    await loginPage.login('standard_user', PASSWORD);
     await expect(page).toHaveURL(/inventory\.html/);
     await expect(page.locator('[data-test="title"]')).toHaveText('Products');
   });
 
-  test('senha inválida mostra erro', async ({ page }) => {
-    await page.locator('[data-test="username"]').fill('standard_user');
-    await page.locator('[data-test="password"]').fill('errada');
-    await page.locator('[data-test="login-button"]').click();
-    await expect(page.locator('[data-test="error"]')).toContainText('do not match');
+  test('senha inválida mostra erro', async ({ loginPage }) => {
+    await loginPage.login('standard_user', 'errada');
+    await expect(loginPage.error).toContainText('do not match');
   });
 
-  test('usuário bloqueado mostra erro', async ({ page }) => {
-    await page.locator('[data-test="username"]').fill('locked_out_user');
-    await page.locator('[data-test="password"]').fill('secret_sauce');
-    await page.locator('[data-test="login-button"]').click();
-    await expect(page.locator('[data-test="error"]')).toContainText('locked out');
+  test('usuário bloqueado mostra erro', async ({ loginPage }) => {
+    await loginPage.login('locked_out_user', PASSWORD);
+    await expect(loginPage.error).toContainText('locked out');
   });
 
-  test('usuário vazio mostra erro', async ({ page }) => {
-    await page.locator('[data-test="password"]').fill('secret_sauce');
-    await page.locator('[data-test="login-button"]').click();
-    await expect(page.locator('[data-test="error"]')).toContainText('Username is required');
+  test('usuário vazio mostra erro', async ({ loginPage }) => {
+    await loginPage.login('', PASSWORD);
+    await expect(loginPage.error).toContainText('Username is required');
   });
 
-  test('senha vazia mostra erro', async ({ page }) => {
-    await page.locator('[data-test="username"]').fill('standard_user');
-    await page.locator('[data-test="login-button"]').click();
-    await expect(page.locator('[data-test="error"]')).toContainText('Password is required');
+  test('senha vazia mostra erro', async ({ loginPage }) => {
+    await loginPage.login('standard_user', '');
+    await expect(loginPage.error).toContainText('Password is required');
   });
 
   for (const user of ['problem_user', 'performance_glitch_user']) {
-    test(`${user} consegue entrar`, async ({ page }) => {
-      await page.locator('[data-test="username"]').fill(user);
-      await page.locator('[data-test="password"]').fill('secret_sauce');
-      await page.locator('[data-test="login-button"]').click();
+    test(`${user} consegue entrar`, async ({ page, loginPage }) => {
+      await loginPage.login(user, PASSWORD);
       await expect(page).toHaveURL(/inventory\.html/);
     });
   }
