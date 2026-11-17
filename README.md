@@ -1,5 +1,7 @@
 # Automação de testes com Playwright + TypeScript
 
+[![Status dos testes](https://github.com/renangusmao-qa/saucedemo-playwright/actions/workflows/tests.yml/badge.svg)](https://github.com/renangusmao-qa/saucedemo-playwright/actions/workflows/tests.yml)
+
 Este é meu projeto de portfólio para praticar automação de testes. Uso o [SauceDemo](https://www.saucedemo.com), um site de demonstração feito para esse tipo de treino.
 
 ## O que já fiz
