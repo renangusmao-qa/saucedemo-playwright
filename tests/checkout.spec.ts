@@ -36,4 +36,41 @@ test.describe('Carrinho e checkout', () => {
     await page.locator('[data-test="continue"]').click();
     await expect(page.locator('[data-test="error"]')).toContainText('First Name is required');
   });
+
+  test('resumo do pedido mostra o total com imposto', async ({ page }) => {
+    await page.locator('[data-test="shopping-cart-link"]').click();
+    await page.locator('[data-test="checkout"]').click();
+    await page.locator('[data-test="firstName"]').fill('Maria');
+    await page.locator('[data-test="lastName"]').fill('Silva');
+    await page.locator('[data-test="postalCode"]').fill('01001000');
+    await page.locator('[data-test="continue"]').click();
+    await expect(page.locator('[data-test="subtotal-label"]')).toHaveText('Item total: $29.99');
+    await expect(page.locator('[data-test="tax-label"]')).toHaveText('Tax: $2.40');
+    await expect(page.locator('[data-test="total-label"]')).toHaveText('Total: $32.39');
+  });
+
+  test('cancelar o checkout volta para o carrinho', async ({ page }) => {
+    await page.locator('[data-test="shopping-cart-link"]').click();
+    await page.locator('[data-test="checkout"]').click();
+    await page.locator('[data-test="cancel"]').click();
+    await expect(page).toHaveURL(/cart\.html/);
+  });
+
+  test('dois produtos somam no contador e no total', async ({ page }) => {
+    await page.locator('[data-test="add-to-cart-sauce-labs-bike-light"]').click();
+    await expect(page.locator('[data-test="shopping-cart-badge"]')).toHaveText('2');
+    await page.locator('[data-test="shopping-cart-link"]').click();
+    await page.locator('[data-test="checkout"]').click();
+    await page.locator('[data-test="firstName"]').fill('Maria');
+    await page.locator('[data-test="lastName"]').fill('Silva');
+    await page.locator('[data-test="postalCode"]').fill('01001000');
+    await page.locator('[data-test="continue"]').click();
+    await expect(page.locator('[data-test="subtotal-label"]')).toHaveText('Item total: $39.98');
+  });
+
+  test('continuar comprando volta para a lista de produtos', async ({ page }) => {
+    await page.locator('[data-test="shopping-cart-link"]').click();
+    await page.locator('[data-test="continue-shopping"]').click();
+    await expect(page).toHaveURL(/inventory\.html/);
+  });
 });
