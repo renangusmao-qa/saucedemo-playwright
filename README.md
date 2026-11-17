@@ -2,7 +2,18 @@
 
 Projeto de portfólio com testes automatizados no site de demonstração [SauceDemo](https://www.saucedemo.com).
 
-> 🚧 Em construção. Por enquanto só a estrutura do projeto está pronta; os testes chegam nas próximas etapas.
+## O que é testado
+
+**Login** ([tests/login.spec.ts](tests/login.spec.ts))
+- Login válido leva à lista de produtos
+- Senha inválida mostra mensagem de erro
+- Usuário bloqueado mostra mensagem de erro
+
+**Carrinho e checkout** ([tests/checkout.spec.ts](tests/checkout.spec.ts))
+- Adicionar produto atualiza o contador do carrinho
+- Remover produto esvazia o carrinho
+- Checkout completo finaliza o pedido
+- Checkout sem dados obrigatórios mostra mensagem de erro
 
 ## Tecnologias
 
