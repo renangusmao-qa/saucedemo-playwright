@@ -4,7 +4,13 @@ Este é meu projeto de portfólio para praticar automação de testes. Uso o [Sa
 
 ## O que já fiz
 
-Escrevi sete testes. Três cobrem o login: entrar com um usuário válido, errar a senha e tentar entrar com um usuário bloqueado. Os outros quatro cobrem o carrinho e o checkout: adicionar um produto, removê-lo, finalizar um pedido e tentar finalizar sem preencher os dados obrigatórios. Os arquivos estão em `tests/login.spec.ts` e `tests/checkout.spec.ts`.
+Escrevi 21 testes, divididos em três arquivos.
+
+Em `tests/login.spec.ts` testo o login: entrar com um usuário válido, errar a senha, deixar usuário ou senha em branco e tentar entrar com um usuário bloqueado. Também confirmo que o `problem_user` e o `performance_glitch_user` conseguem entrar. Não testo o comportamento deles depois do login.
+
+Em `tests/inventory.spec.ts` testo a lista de produtos: a quantidade de itens, a ordenação por preço e por nome, o detalhe de um produto, o logout e se o carrinho mantém o produto depois de navegar.
+
+Em `tests/checkout.spec.ts` testo o carrinho e o checkout: adicionar e remover produtos, o contador com dois itens, continuar comprando, finalizar um pedido, o resumo com subtotal, imposto e total, cancelar o checkout e tentar finalizar sem preencher os dados.
 
 ## O que aprendi
 
