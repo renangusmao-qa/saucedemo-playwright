@@ -20,6 +20,10 @@ Em `tests/users.spec.ts` comparo as imagens dos produtos. O `standard_user` vê 
 
 Usei os atributos `data-test` do site como seletores. Eles quebram menos que seletores de CSS e deixam o teste mais fácil de ler. O login se repetia nos três arquivos de teste, então movi essa lógica para Page Objects em `pages/`: login, inventário, carrinho e checkout. As fixtures em `tests/fixtures.ts` entregam esses objetos prontos para os testes, e a `inventoryPage` já vem logada como `standard_user`. Assim os seletores ficam em um lugar só e os testes ficam mais curtos. Também passei a checar os tipos com o `tsc`, porque o Playwright compila o TypeScript mas não verifica os tipos.
 
+## Como usei IA
+
+Usei o Claude Code como ferramenta de apoio neste projeto, e por isso ele aparece como coautor nos commits. Eu defini o que testar. Pedi ao Claude Code para gerar a maior parte do código e dos dados dos testes, porque assim o trabalho de base fica bem mais rápido. Depois eu revisei tudo, corrigi o que estava errado e ajustei várias linhas por conta própria. Sei escrever testes sem a ferramenta, mas, com ela, gasto menos tempo no básico e mais tempo refinando e revisando.
+
 ## Tecnologias
 
 Playwright Test com Chromium, TypeScript e Node.js. Os testes e a checagem de tipos rodam no GitHub Actions a cada push na `main`, pelo workflow `.github/workflows/tests.yml`.
