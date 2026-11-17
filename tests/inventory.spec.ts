@@ -20,7 +20,7 @@ test.describe('Inventário', () => {
   test('abre o detalhe de um produto', async ({ page, inventoryPage }) => {
     await inventoryPage.openItem(4);
     await expect(page).toHaveURL(/inventory-item\.html\?id=4/);
-    await expect(inventoryPage.names).toHaveText('Sauce Labs Backpack');
+    await expect(inventoryPage.detailName).toHaveText('Sauce Labs Backpack');
   });
 
   test('logout volta para a tela de login', async ({ inventoryPage }) => {

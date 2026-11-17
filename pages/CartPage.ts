@@ -4,7 +4,7 @@ export class CartPage {
   readonly itemNames: Locator;
 
   constructor(private readonly page: Page) {
-    this.itemNames = page.locator('[data-test="inventory-item-name"]');
+    this.itemNames = page.locator('.cart_item [data-test="inventory-item-name"]');
   }
 
   async checkout() {
