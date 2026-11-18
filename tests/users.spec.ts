@@ -8,7 +8,7 @@ test.describe('Imagens dos produtos', () => {
     expect(new Set(srcs).size).toBe(6);
   });
 
-  // Bug conhecido do problem_user: todos os produtos mostram a mesma imagem.
+  // Erro esperado (problem_user): todos os produtos mostram a mesma imagem, então só 1 src único em vez de 6.
   // test.fail() faz o teste passar enquanto o bug existir e avisa quando ele for corrigido.
   test('problem_user vê uma imagem diferente para cada produto', async ({ page, loginPage }) => {
     test.fail();

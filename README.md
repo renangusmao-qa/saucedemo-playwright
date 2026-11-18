@@ -16,6 +16,8 @@ Em `tests/checkout.spec.ts` testo o carrinho e o checkout: adicionar e remover p
 
 Em `tests/users.spec.ts` comparo as imagens dos produtos. O `standard_user` vê uma imagem diferente para cada produto. O `problem_user` tem um bug conhecido, em que todos os produtos mostram a mesma imagem. Esse teste usa `test.fail()`, então passa enquanto o bug existir e falha se o site o corrigir.
 
+Em `tests/Error_user.spec.ts` uso a mesma técnica para o `error_user`: o login funciona, mas o botão Finish do resumo do checkout não faz nada e o pedido nunca é concluído.
+
 ## O que aprendi
 
 Usei os atributos `data-test` do site como seletores. Eles quebram menos que seletores de CSS e deixam o teste mais fácil de ler. O login se repetia nos três arquivos de teste, então movi essa lógica para Page Objects em `pages/`: login, inventário, carrinho e checkout. As fixtures em `tests/fixtures.ts` entregam esses objetos prontos para os testes, e a `inventoryPage` já vem logada como `standard_user`. Assim os seletores ficam em um lugar só e os testes ficam mais curtos. Também passei a checar os tipos com o `tsc`, porque o Playwright compila o TypeScript mas não verifica os tipos.
