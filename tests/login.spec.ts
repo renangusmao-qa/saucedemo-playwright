@@ -27,6 +27,12 @@ test.describe('Login', () => {
     await expect(loginPage.error).toContainText('Password is required');
   });
 
+  test('acessar o inventário sem login mostra erro', async ({ page, loginPage }) => {
+    await page.goto('/inventory.html');
+    await expect(loginPage.error).toContainText('You can only access');
+    await expect(page).not.toHaveURL(/inventory\.html/);
+  });
+
   for (const user of ['problem_user', 'performance_glitch_user']) {
     test(`${user} consegue entrar`, async ({ page, loginPage }) => {
       await loginPage.login(user, PASSWORD);
