@@ -38,6 +38,8 @@ Preciso do Node.js instalado. Depois, rodo estes comandos:
 npm install                      # instala as dependências
 npx playwright install chromium  # baixa o navegador usado nos testes
 npm run typecheck                # checa os tipos do TypeScript
-npm test                         # roda os testes
+npm test                         # roda todos os testes
+npm run test:ui                  # abre a interface do Playwright para rodar e depurar os testes
+npm run codegen                  # grava ações no navegador e gera o código do teste
 npm run report                   # abre o relatório HTML da última execução
 ```
