@@ -1,4 +1,5 @@
-import { test, expect, PASSWORD } from './fixtures';
+import { test, expect } from './fixtures';
+import { PASSWORD, USERS, PRODUCT } from './data';
 
 test.describe('Inventário', () => {
   test('lista os 6 produtos', async ({ inventoryPage }) => {
@@ -31,9 +32,9 @@ test.describe('Inventário', () => {
   });
 
   test('o carrinho mantém o produto depois de sair e entrar de novo', async ({ inventoryPage, loginPage }) => {
-    await inventoryPage.add('sauce-labs-backpack');
+    await inventoryPage.add(PRODUCT.id);
     await inventoryPage.logout();
-    await loginPage.login('standard_user', PASSWORD);
+    await loginPage.login(USERS.standard, PASSWORD);
     await expect(inventoryPage.cartBadge).toHaveText('1');
   });
 
@@ -46,9 +47,9 @@ test.describe('Inventário', () => {
   });
 
   test('abre o detalhe de um produto', async ({ page, inventoryPage }) => {
-    await inventoryPage.openItem(4);
-    await expect(page).toHaveURL(/inventory-item\.html\?id=4/);
-    await expect(inventoryPage.detailName).toHaveText('Sauce Labs Backpack');
+    await inventoryPage.openItem(PRODUCT.detailId);
+    expect(page.url()).toContain(`inventory-item.html?id=${PRODUCT.detailId}`);
+    await expect(inventoryPage.detailName).toHaveText(PRODUCT.name);
   });
 
   test('logout volta para a tela de login', async ({ inventoryPage }) => {
@@ -57,8 +58,8 @@ test.describe('Inventário', () => {
   });
 
   test('o carrinho mantém o produto depois de navegar', async ({ inventoryPage }) => {
-    await inventoryPage.add('sauce-labs-backpack');
-    await inventoryPage.openItem(4);
+    await inventoryPage.add(PRODUCT.id);
+    await inventoryPage.openItem(PRODUCT.detailId);
     await inventoryPage.backToProducts();
     await expect(inventoryPage.cartBadge).toHaveText('1');
   });

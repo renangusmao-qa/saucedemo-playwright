@@ -1,39 +1,40 @@
-import { test, expect, PASSWORD } from './fixtures';
+import { test, expect } from './fixtures';
+import { PASSWORD, USERS, MESSAGES } from './data';
 
 test.describe('Login', () => {
   test('login válido leva à lista de produtos', async ({ page, loginPage }) => {
-    await loginPage.login('standard_user', PASSWORD);
+    await loginPage.login(USERS.standard, PASSWORD);
     await expect(page).toHaveURL(/inventory\.html/);
     await expect(page.locator('[data-test="title"]')).toHaveText('Products');
   });
 
   test('senha inválida mostra erro', async ({ loginPage }) => {
-    await loginPage.login('standard_user', 'errada');
-    await expect(loginPage.error).toContainText('do not match');
+    await loginPage.login(USERS.standard, 'errada');
+    await expect(loginPage.error).toContainText(MESSAGES.wrongCredentials);
   });
 
   test('usuário bloqueado mostra erro', async ({ loginPage }) => {
-    await loginPage.login('locked_out_user', PASSWORD);
-    await expect(loginPage.error).toContainText('locked out');
+    await loginPage.login(USERS.locked, PASSWORD);
+    await expect(loginPage.error).toContainText(MESSAGES.lockedOut);
   });
 
   test('usuário vazio mostra erro', async ({ loginPage }) => {
     await loginPage.login('', PASSWORD);
-    await expect(loginPage.error).toContainText('Username is required');
+    await expect(loginPage.error).toContainText(MESSAGES.usernameRequired);
   });
 
   test('senha vazia mostra erro', async ({ loginPage }) => {
-    await loginPage.login('standard_user', '');
-    await expect(loginPage.error).toContainText('Password is required');
+    await loginPage.login(USERS.standard, '');
+    await expect(loginPage.error).toContainText(MESSAGES.passwordRequired);
   });
 
   test('acessar o inventário sem login mostra erro', async ({ page, loginPage }) => {
     await page.goto('/inventory.html');
-    await expect(loginPage.error).toContainText('You can only access');
+    await expect(loginPage.error).toContainText(MESSAGES.needLogin);
     await expect(page).not.toHaveURL(/inventory\.html/);
   });
 
-  for (const user of ['problem_user', 'performance_glitch_user']) {
+  for (const user of [USERS.problem, USERS.glitch]) {
     test(`${user} consegue entrar`, async ({ page, loginPage }) => {
       await loginPage.login(user, PASSWORD);
       await expect(page).toHaveURL(/inventory\.html/);

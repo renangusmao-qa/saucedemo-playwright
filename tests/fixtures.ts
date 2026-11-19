@@ -4,7 +4,8 @@ import { CheckoutPage } from '../pages/CheckoutPage';
 import { InventoryPage } from '../pages/InventoryPage';
 import { LoginPage } from '../pages/LoginPage';
 
-export const PASSWORD = 'secret_sauce';
+import { PASSWORD, USERS } from './data';
+export { PASSWORD };
 
 type Fixtures = {
   loginPage: LoginPage;
@@ -20,7 +21,7 @@ export const test = base.extend<Fixtures>({
     await use(loginPage);
   },
   inventoryPage: async ({ page, loginPage }, use) => {
-    await loginPage.login('standard_user', PASSWORD);
+    await loginPage.login(USERS.standard, PASSWORD);
     await use(new InventoryPage(page));
   },
   cartPage: async ({ page }, use) => use(new CartPage(page)),
